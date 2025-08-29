@@ -3,24 +3,31 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { BookmarkContext } from "../context/BookmarkContext";
 
 function Login() {
-  const {user, login} = useContext(BookmarkContext);
+  const {user, login, loading} = useContext(BookmarkContext);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   useEffect(() => {
-    if (user) {
-      navigate("/dashboard");
-    } else {
+    if (!user && !loading) {
       navigate("/login");
+    } else {
+      navigate("/dashboard");
     }
-  }, [user]);
+  }, [user, loading]);
 
   const loginHandler = (event) => {
     event.preventDefault();
     login(email, password);
   };
+
+  if(loading){
+    return(
+      <div>Loading...</div>
+    )
+  }
+
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="text-xl font-bold p-2">

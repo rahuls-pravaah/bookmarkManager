@@ -1,8 +1,16 @@
-import React from "react";
+import React, {useEffect, useContext} from "react";
 import Navbar from "./Navbar";
 import { NavLink } from "react-router-dom";
+import { BookmarkContext } from "../context/BookmarkContext";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const {user, loading} = useContext(BookmarkContext);
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(user && !loading) navigate("/dashboard")
+    else navigate('/')
+  },[user, loading])
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-10">
       <div className="max-w-3xl w-full bg-white shadow-lg rounded-lg p-8">

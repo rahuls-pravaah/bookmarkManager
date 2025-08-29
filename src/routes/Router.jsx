@@ -9,12 +9,18 @@ import Navbar from '../components/Navbar';
 import UserNav from '../user/UserNav';
 
 function Router() {
-  const {user, userData} = useContext(BookmarkContext);
+  const {user, loading} = useContext(BookmarkContext);
   const navigate = useNavigate();
 
   useEffect(()=>{
-    if(!user) navigate("/login");
-  },[user])
+    if(!loading && user) navigate("/dashboard");
+  },[user, loading])
+
+  if(loading){
+    return (
+      <div>Loading...</div>
+    )
+  }
   return (
     <>
     {

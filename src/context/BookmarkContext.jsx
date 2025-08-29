@@ -21,15 +21,17 @@ import { data, useNavigate } from "react-router-dom";
 export const BookmarkContext = createContext();
 
 export function BookmarkProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(true);
   const [userData, setUserData] = useState(null);
   const [bookmark, setBookmark] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      setLoading(false);
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnap = await getDoc(userDocRef);
@@ -55,7 +57,7 @@ export function BookmarkProvider({ children }) {
       }
       return;
     });
-    setUser(null);
+    // setUser(null);
     return () => unsubscribe();
   }, [user]);
 
@@ -180,6 +182,7 @@ export function BookmarkProvider({ children }) {
         bookmark,
         deleteBookmarkHandler,
         editBookmarHandler,
+        loading
       }}
     >
       {children}
