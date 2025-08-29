@@ -14,9 +14,11 @@ import {
   getDocs,
   deleteDoc,
   updateDoc,
+  onSnapshot,
+  orderBy,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const BookmarkContext = createContext();
 
@@ -29,10 +31,12 @@ export function BookmarkProvider({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const authUnsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setLoading(false);
+
       if (user) {
+        // Fetch user data
         const userDocRef = doc(db, "users", user.uid);
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
@@ -40,26 +44,37 @@ export function BookmarkProvider({ children }) {
         } else {
           setUserData(null);
         }
+
+        // Set up the real-time bookmarks listener
         const bookmarkCollectionRef = collection(
           db,
           "users",
           user.uid,
           "bookmarks"
         );
-        const q = query(bookmarkCollectionRef);
-        const bookmarkSnapshot = await getDocs(q);
-        const bookmarkList = bookmarkSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const q = query(bookmarkCollectionRef, orderBy("createdAt", "desc"));
 
-        setBookmark(bookmarkList);
+        const bookmarkUnsubscribe = onSnapshot(q, (snapshot) => {
+          const fetchedBookmarks = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setBookmark(fetchedBookmarks);
+        });
+
+        return () => {
+          authUnsubscribe();
+          bookmarkUnsubscribe();
+        };
+      } else {
+        setUserData(null);
+        setBookmark([]);
       }
-      return;
     });
-    // setUser(null);
-    return () => unsubscribe();
-  }, [user]);
+
+    // This is the cleanup for the onAuthStateChanged listener
+    return () => authUnsubscribe();
+  }, []); // The empty dependency array ensures this effect runs only once
 
   const login = async (email, password) => {
     try {
@@ -182,7 +197,7 @@ export function BookmarkProvider({ children }) {
         bookmark,
         deleteBookmarkHandler,
         editBookmarHandler,
-        loading
+        loading,
       }}
     >
       {children}

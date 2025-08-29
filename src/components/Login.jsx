@@ -47,6 +47,7 @@ function Login() {
               value={email}
               id="email"
               name="email"
+              required
               onChange={(event)=>setEmail(event.target.value)}
               className="border p-1 rounded outline-none"
             />
@@ -57,6 +58,7 @@ function Login() {
               type="password"
               value={password}
               id="password"
+              required
               onChange={(event)=>setPassword(event.target.value)}
               className="border p-1 rounded"
             />

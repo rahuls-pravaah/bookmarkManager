@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { BookmarkContext } from "../context/BookmarkContext";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const {
@@ -22,18 +22,20 @@ function Dashboard() {
 
   const addBookmarkHandler = (event) => {
     event.preventDefault();
+    setError("");
+    setMessage("");
     if (!title || !url) {
       setError("Please enter both a title and a url");
+      return;
+    }
+    if (!isValidUrl(url)) {
+      setError("Enter valid url");
       return;
     }
     const response = addBookmark(title, url);
     response
       .then((data) => {
         setMessage(data.message);
-        setMyBookmark((prevBookmark) => [
-          { id: data.docRef, title: title, url: url },
-          ...prevBookmark,
-        ]);
         setTimeout(() => {
           setMessage("");
         }, 5000);
@@ -53,6 +55,14 @@ function Dashboard() {
     setTitle(title);
     setUrl(url);
     setEditId(id);
+  };
+
+  const isValidUrl = (urlString) => {
+    try {
+      return Boolean(new URL(urlString));
+    } catch (e) {
+      return false;
+    }
   };
 
   useEffect(() => {
@@ -77,7 +87,7 @@ function Dashboard() {
               className="border p-1 rounded outline-none"
             />
             <input
-              type="text"
+              type="url"
               value={url}
               placeholder="URL"
               required
@@ -88,7 +98,12 @@ function Dashboard() {
               <>
                 <button
                   type="button"
-                  onClick={() => {editBookmarHandler(editId, title, url); setIsEditButtonClicked(false); setTitle(""); setUrl("");}}
+                  onClick={() => {
+                    editBookmarHandler(editId, title, url);
+                    setIsEditButtonClicked(false);
+                    setTitle("");
+                    setUrl("");
+                  }}
                   className="p-2 bg-blue-600 rounded-md hover:cursor-pointer hover:bg-blue-500 font-bold text-white "
                 >
                   Update
@@ -124,7 +139,7 @@ function Dashboard() {
           return (
             <div
               key={data.id}
-              className="flex justify-between font-bold shadow-md p-2 bg-gray-200 mt-2"
+              className="flex justify-between font-bold shadow-md p-2 bg-gray-100 mt-2 hover:bg-gray-300"
             >
               <div>
                 <a href={data.url} target="_blank">
@@ -156,4 +171,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-Dashboard;
