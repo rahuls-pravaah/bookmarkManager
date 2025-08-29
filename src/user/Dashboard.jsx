@@ -88,7 +88,7 @@ function Dashboard() {
               <>
                 <button
                   type="button"
-                  onClick={() => editBookmarHandler(editId, title, url)}
+                  onClick={() => {editBookmarHandler(editId, title, url); setIsEditButtonClicked(false); setTitle(""); setUrl("");}}
                   className="p-2 bg-blue-600 rounded-md hover:cursor-pointer hover:bg-blue-500 font-bold text-white "
                 >
                   Update
