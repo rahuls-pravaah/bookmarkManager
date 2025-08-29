@@ -27,6 +27,7 @@ export function BookmarkProvider({ children }) {
   const [userData, setUserData] = useState(null);
   const [bookmark, setBookmark] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorFromContext, setErrorFromContext] = useState("");
 
   const navigate = useNavigate();
 
@@ -74,7 +75,7 @@ export function BookmarkProvider({ children }) {
 
     // This is the cleanup for the onAuthStateChanged listener
     return () => authUnsubscribe();
-  }, []); // The empty dependency array ensures this effect runs only once
+  }, []);
 
   const login = async (email, password) => {
     try {
@@ -138,6 +139,20 @@ export function BookmarkProvider({ children }) {
       return { message: "user created successfully" };
     } catch (error) {
       console.log(error);
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setErrorFromContext("Email already exist");
+          break;
+
+        case "auth/weak-password":
+          setErrorFromContext("Password length more than 6 character");
+          break;
+          
+        default:
+          setErrorFromContext("An unexpected error occurred. Please try again later.");
+          break;
+      }
+      setTimeout(()=>{setErrorFromContext("")},5000)
     }
   };
 
@@ -198,6 +213,7 @@ export function BookmarkProvider({ children }) {
         deleteBookmarkHandler,
         editBookmarHandler,
         loading,
+        errorFromContext
       }}
     >
       {children}
