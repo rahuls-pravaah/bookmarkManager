@@ -9,6 +9,7 @@ function Dashboard() {
     bookmark,
     deleteBookmarkHandler,
     editBookmarHandler,
+    openModal,
   } = useContext(BookmarkContext);
   const navigate = useNavigate();
 
@@ -65,6 +66,20 @@ function Dashboard() {
     }
   };
 
+  const handleOpenConfirm = (id, title) =>{
+    openModal(
+      <div>
+        <h2 className="text-xl font-bold">Confirm Action</h2>
+        <p className="mt-2">Are you sure you want to delete this bookamrk?</p>
+        <p className="mt-2 text-blue-600 font-bold">{title}</p>
+        <div className="flex justify-center items-center gap-10 mt-4 ">
+          <button onClick={()=>{deleteBookmarkHandler(id); openModal(null)}} className="p-2 hover:bg-red-600 text-red-600 hover:text-white font-bold border rounded-lg hover:cursor-pointer">Yes</button>
+          <button onClick={()=>openModal(null)} className="p-2 hover:bg-blue-600 text-blue-600 hover:text-white font-bold border rounded-lg hover:cursor-pointer">Cancel</button>
+        </div>
+      </div>
+    )
+  }
+
   useEffect(() => {
     if (!user) navigate("/login");
     function loadBookmark() {
@@ -84,7 +99,7 @@ function Dashboard() {
               placeholder="Title"
               required
               onChange={(event) => setTitle(event.target.value)}
-              className="border p-1 rounded outline-none w-full "
+              className="border p-1 rounded outline-none "
             />
             <input
               type="url"
@@ -92,7 +107,7 @@ function Dashboard() {
               placeholder="URL"
               required
               onChange={(event) => setUrl(event.target.value)}
-              className="border p-1 rounded outline-none w-full"
+              className="border p-1 rounded outline-none"
             />
             {isEditButtonClicked ? (
               <>
@@ -139,23 +154,24 @@ function Dashboard() {
           return (
             <div
               key={data.id}
-              className="flex justify-between font-bold shadow-md p-2 bg-gray-100 mt-2 hover:bg-gray-300"
+              className="flex justify-between items-center font-bold shadow-md p-2 bg-gray-100 mt-2 hover:bg-gray-300"
             >
               <div>
-                <a href={data.url} target="_blank">
+                <a href={data.url} target="_blank" className="text-blue-600">
                   {data.title}
                 </a>
               </div>
               <div className="flex gap-2">
                 <button
-                  className="hover:cursor-pointer text-blue-600"
+                  className="hover:cursor-pointer text-blue-600 hover:bg-blue-700 hover:text-white border rounded-md p-1"
                   onClick={() => editHandler(data.id, data.title, data.url)}
                 >
                   Edit
                 </button>
                 <button
-                  className="hover:cursor-pointer text-red-600"
-                  onClick={() => deleteBookmarkHandler(data.id)}
+                  className="hover:cursor-pointer hover:bg-red-700 hover:text-white text-red-600 border rounded-md p-1"
+                  // onClick={() => {deleteBookmarkHandler(data.id);}}
+                  onClick={()=>handleOpenConfirm(data.id, data.title)}
                 >
                   Delete
                 </button>

@@ -28,6 +28,7 @@ export function BookmarkProvider({ children }) {
   const [bookmark, setBookmark] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorFromContext, setErrorFromContext] = useState("");
+  const [modalContent, setModalContentn] = useState(false);
 
   const navigate = useNavigate();
 
@@ -202,6 +203,9 @@ export function BookmarkProvider({ children }) {
     );
   };
 
+  const openModal = (content) => setModalContentn(content);
+  const closeModal = () => setModalContentn(null);
+
   return (
     <BookmarkContext.Provider
       value={{
@@ -215,7 +219,10 @@ export function BookmarkProvider({ children }) {
         deleteBookmarkHandler,
         editBookmarHandler,
         loading,
-        errorFromContext
+        errorFromContext,
+        modalContent,
+        openModal,
+        closeModal,
       }}
     >
       {children}
