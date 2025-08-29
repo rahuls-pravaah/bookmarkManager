@@ -86,25 +86,27 @@ export function BookmarkProvider({ children }) {
         const userDocSnap = await getDoc(userDocRef);
         setUserData(userDocSnap.data());
         setUser(user);
+        setErrorFromContext("");
         return;
       }
       setUser(null);
     } catch (error) {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-
-      switch (errorCode) {
+      console.log(error);
+      switch (error.code) {
+        case "auth/invalid-credential":
+          setErrorFromContext("Invalid credential");
+          break;
         case "auth/invalid-email":
-          alert("The email address is not valid.");
+          setErrorFromContext("The email address is not valid.");
           break;
         case "auth/user-not-found":
-          alert("No user found with this email.");
+          setErrorFromContext("No user found with this email.");
           break;
         case "auth/wrong-password":
-          alert("Incorrect password. Please try again.");
+          setErrorFromContext("Incorrect password. Please try again.");
           break;
         default:
-          alert(errorMessage);
+          setErrorFromContext("An unexpected error occurred. Please try again later.");
           break;
       }
     }
@@ -147,7 +149,7 @@ export function BookmarkProvider({ children }) {
         case "auth/weak-password":
           setErrorFromContext("Password length more than 6 character");
           break;
-          
+
         default:
           setErrorFromContext("An unexpected error occurred. Please try again later.");
           break;

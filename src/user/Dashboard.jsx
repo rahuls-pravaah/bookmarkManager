@@ -74,17 +74,17 @@ function Dashboard() {
   }, [user, bookmark]);
 
   return (
-    <div className="mt-10">
+    <div className="flex flex-col w-full mt-5">
       <form onSubmit={addBookmarkHandler}>
         <div className="flex justify-start items-start">
-          <div className="flex gap-2 ">
+          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
             <input
               type="text"
               value={title}
               placeholder="Title"
               required
               onChange={(event) => setTitle(event.target.value)}
-              className="border p-1 rounded outline-none"
+              className="border p-1 rounded outline-none w-full "
             />
             <input
               type="url"
@@ -92,7 +92,7 @@ function Dashboard() {
               placeholder="URL"
               required
               onChange={(event) => setUrl(event.target.value)}
-              className="border p-1 rounded outline-none"
+              className="border p-1 rounded outline-none w-full"
             />
             {isEditButtonClicked ? (
               <>
@@ -148,13 +148,13 @@ function Dashboard() {
               </div>
               <div className="flex gap-2">
                 <button
-                  className="hover:cursor-pointer"
+                  className="hover:cursor-pointer text-blue-600"
                   onClick={() => editHandler(data.id, data.title, data.url)}
                 >
                   Edit
                 </button>
                 <button
-                  className="hover:cursor-pointer"
+                  className="hover:cursor-pointer text-red-600"
                   onClick={() => deleteBookmarkHandler(data.id)}
                 >
                   Delete

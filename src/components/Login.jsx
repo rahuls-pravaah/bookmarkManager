@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { BookmarkContext } from "../context/BookmarkContext";
 
 function Login() {
-  const {user, login, loading} = useContext(BookmarkContext);
+  const {user, login, loading, errorFromContext} = useContext(BookmarkContext);
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("")
@@ -84,7 +84,9 @@ function Login() {
             </button>
           </div>
         </form>
-        
+        {
+          errorFromContext && <div className="text-red-600 font-bold">{errorFromContext}</div>
+        }
         <div className="mt-6 text-center">
           <NavLink
             to="/signup"
