@@ -9,6 +9,9 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  // for UI
+  const [inputBorder, setInputBorder] = useState("");
 
   useEffect(() => {
     if (!user && !loading) {
@@ -28,17 +31,17 @@ function Login() {
   }
 
   return (
-    <div className="flex bg-gray-100 p-4">
-      <div className="w-1/2 hidden md:flex p-10">
-      <img src="/image.png" alt="bookmark image" className="w-[27rem] h-[27rem] rounded-xl shadow-blue-700 shadow-2xl"/>
+    <div className="flex bg-gray-100 sm:p-6">
+      <div className="w-1/2 hidden md:flex">
+      <img src="/image.png" alt="bookmark image" className="w-[34rem] h-[34rem] rounded-xl shadow-blue-700 shadow-2xl"/>
       </div>  
-      <div className="flex justify-center items-center flex-col w-full md:w-1/2">
-        <div className="bg-white p-8 rounded-xl shadow-2xl transition-all duration-300 transform hover:shadow-3xl">
+      <div className="flex items-center flex-col w-full md:w-1/2">
+        <div className="bg-white p-6 rounded-2xl shadow-xl transition-all duration-300 transform hover:shadow-3xl">
           <div className="text-center mb-6">
             <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight">
               Welcome Back
             </h1>
-            <p className="text-gray-500 mt-2">Log in to your account.</p>
+            <p className="text-gray-500 mt-2 font-bold">Log in to your account.</p>
           </div>
 
           <form onSubmit={loginHandler} className="space-y-6">
