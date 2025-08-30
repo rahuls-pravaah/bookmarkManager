@@ -63,7 +63,7 @@ function Signup() {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen flex items-center justify-center sm:p-6 font-sans">
+    <div className="flex bg-gray-100 sm:p-6">
       <div className="w-1/2 hidden md:flex">
       <img src="/signup.jpg" alt="bookmark image" className="w-[34rem] h-[34rem] rounded-xl shadow-blue-700 shadow-2xl"/>
       </div>

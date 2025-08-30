@@ -12,7 +12,7 @@ function Home() {
     else navigate('/')
   },[user, loading])
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 py-10">
+    <div className="bg-gray-100 flex items-center justify-center px-4 py-10">
       <div className="max-w-3xl w-full bg-white shadow-lg rounded-lg p-8">
         {/* Title */}
         <h1 className="text-3xl font-bold text-gray-800 mb-4">
