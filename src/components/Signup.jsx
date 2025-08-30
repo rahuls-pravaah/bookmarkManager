@@ -10,7 +10,15 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  
+
+  const passwordValidation = (password) =>{
+    const lenghtCheck = password.length >= 6;
+    const capitalCheck = /[A-Z]/.test(password);
+    const numberCheck = /[0-9]/.test(password);
+    const spacialCheck = /[^A-Za-z0-9]/.test(password);
+    return lenghtCheck && capitalCheck && numberCheck && spacialCheck;
+  }
+
   const signupHandler = (event) =>{
     event.preventDefault();
     setMessage("");
@@ -42,8 +50,17 @@ function Signup() {
       },5000)
       return;
     }
-    const response = signup(fullname, email, password);
-    setMessage(response.message);
+    if(passwordValidation(password)){
+      const response = signup(fullname, email, password);
+      setMessage(response.message);
+    }else{
+      setError(`Password does not meet all requirements
+        At least 6 character
+        At least one capital letter
+        At least one number
+        At least one special character`);
+      return;
+    }
   }
 
   return (
@@ -139,7 +156,7 @@ function Signup() {
           </div>
         )}
         {error && (
-          <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md">
+          <div className="flex justify-start items-start mt-4 p-3 bg-red-100 text-red-700 rounded-md whitespace-pre-line">
             {error}
           </div>
         )}
