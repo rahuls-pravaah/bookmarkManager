@@ -8,7 +8,7 @@ function UserNav() {
     logout();
   };
   return (
-    <div className="flex justify-between bg-blue-400">
+    <div className="sticky top-0 z-50 flex justify-between bg-blue-400">
       <div className="flex p-1 justify-center items-center">
         <h1 className="text-white">
           {userData?.name || "username"}
