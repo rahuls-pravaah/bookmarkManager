@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  sendEmailVerification
 } from "firebase/auth";
 import {
   doc,
@@ -82,6 +83,11 @@ export function BookmarkProvider({ children }) {
   const login = async (email, password) => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
+      if(!response.user.emailVerified){
+        setUser(false);
+        return {success: false, message: "Please verify your email before login"}
+      }
+      
       const user = response.user;
       if (user) {
         const userDocRef = doc(db, "users", user.uid);
@@ -136,13 +142,15 @@ export function BookmarkProvider({ children }) {
         email,
         password
       );
+      await sendEmailVerification(userData.user);
       const user = userData.user;
       await setDoc(doc(db, "users", user.uid), {
         name: fullname,
         email: user.email,
         createdAt: new Date(),
       });
-      return { message: "user created successfully" };
+      return { message: `user created successfully.
+                          Please check your email to verify` };
     } catch (error) {
       console.log(error);
       switch (error.code) {

@@ -12,6 +12,7 @@ function Login() {
 
   // for UI
   const [inputBorder, setInputBorder] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (!user && !loading) {
@@ -23,7 +24,12 @@ function Login() {
 
   const loginHandler = (event) => {
     event.preventDefault();
-    login(email, password);
+    setMessage("");
+    const response = login(email, password);
+    console.log(response);
+    
+    response.then(data=>{setMessage(data.message); console.log(data.message);
+     setTimeout(()=>{setMessage("")},5000); return});
   };
 
   if (loading) {
@@ -109,6 +115,9 @@ function Login() {
               {errorFromContext && (
                 <div className="text-red-600 font-bold">{errorFromContext}</div>
               )}
+              {
+                message && <p className="text-red-500">{message}</p>
+              }
               <div className="mt-6 text-center">
                 <NavLink
                   to="/signup"
