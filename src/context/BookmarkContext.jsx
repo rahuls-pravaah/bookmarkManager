@@ -3,6 +3,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import {
   doc,
@@ -107,7 +108,9 @@ export function BookmarkProvider({ children }) {
           setErrorFromContext("Incorrect password. Please try again.");
           break;
         default:
-          setErrorFromContext("An unexpected error occurred. Please try again later.");
+          setErrorFromContext(
+            "An unexpected error occurred. Please try again later."
+          );
           break;
       }
     }
@@ -152,10 +155,14 @@ export function BookmarkProvider({ children }) {
           break;
 
         default:
-          setErrorFromContext("An unexpected error occurred. Please try again later.");
+          setErrorFromContext(
+            "An unexpected error occurred. Please try again later."
+          );
           break;
       }
-      setTimeout(()=>{setErrorFromContext("")},5000)
+      setTimeout(() => {
+        setErrorFromContext("");
+      }, 5000);
     }
   };
 
@@ -206,6 +213,16 @@ export function BookmarkProvider({ children }) {
   const openModal = (content) => setModalContentn(content);
   const closeModal = () => setModalContentn(null);
 
+  const sendResetPasswordLink = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      return {success: true, message: "Password reset email sent"}
+    } catch (error) {
+      setErrorFromContext(error);
+      return;
+    }
+  };
+
   return (
     <BookmarkContext.Provider
       value={{
@@ -223,6 +240,7 @@ export function BookmarkProvider({ children }) {
         modalContent,
         openModal,
         closeModal,
+        sendResetPasswordLink,
       }}
     >
       {children}

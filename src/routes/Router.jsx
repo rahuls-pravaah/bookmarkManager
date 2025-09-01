@@ -7,6 +7,7 @@ import Signup from '../components/Signup';
 import Dashboard from '../user/Dashboard';
 import Navbar from '../components/Navbar';
 import UserNav from '../user/UserNav';
+import ForgetPassword from '../components/ForgetPassword';
 
 function Router() {
   const {user, loading} = useContext(BookmarkContext);
@@ -29,6 +30,7 @@ function Router() {
     <Routes>
       <Route path='/' element={<Home />}/>
       <Route path='/login' element={<Login />}/>
+      <Route path='/forgetPassword' element={<ForgetPassword />}/>
       <Route path='/signup' element={<Signup />}/>
       <Route path='/dashboard' element={<Dashboard />}/>
     </Routes>
