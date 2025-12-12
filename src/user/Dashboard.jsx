@@ -3,14 +3,8 @@ import { BookmarkContext } from "../context/BookmarkContext";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
-  const {
-    user,
-    addBookmark,
-    bookmark,
-    deleteBookmarkHandler,
-    editBookmarHandler,
-    openModal,
-  } = useContext(BookmarkContext);
+  const { user, addBookmark, bookmark, deleteBookmarkHandler, editBookmarHandler, openModal } =
+    useContext(BookmarkContext);
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
@@ -102,121 +96,116 @@ function Dashboard() {
   }, [user, bookmark]);
 
   return (
-    <div className="flex flex-col w-full mt-5">
-      <form onSubmit={addBookmarkHandler}>
-        <div className="flex justify-start items-start">
-          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-            <input
-              type="text"
-              value={title}
-              placeholder="Title"
-              required
-              onChange={(event) => setTitle(event.target.value)}
-              className="border p-1 rounded outline-none "
-            />
-            <input
-              type="url"
-              value={url}
-              placeholder="URL"
-              required
-              onChange={(event) => setUrl(event.target.value)}
-              className="border p-1 rounded outline-none"
-            />
-            {isEditButtonClicked ? (
-              <>
+    <div className="flex flex-col w-full">
+      <div className="sticky top-15 bg-white">
+        <form onSubmit={addBookmarkHandler}>
+          <div className="">
+            <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+              <input
+                type="text"
+                value={title}
+                placeholder="Title"
+                required
+                onChange={(event) => setTitle(event.target.value)}
+                className="border p-1 rounded outline-none md:w-1/3"
+              />
+              <input
+                type="url"
+                value={url}
+                placeholder="URL"
+                required
+                onChange={(event) => setUrl(event.target.value)}
+                className="border p-1 rounded outline-none md:w-1/3"
+              />
+              {isEditButtonClicked ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      editBookmarHandler(editId, title, url);
+                      setIsEditButtonClicked(false);
+                      setTitle("");
+                      setUrl("");
+                    }}
+                    className="p-2 bg-blue-600 rounded-md hover:cursor-pointer hover:bg-blue-500 font-bold text-white "
+                  >
+                    Update
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditButtonClicked(false);
+                      setTitle("");
+                      setUrl("");
+                      setEditId("");
+                    }}
+                    className="p-2 bg-blue-600 rounded-md hover:cursor-pointer hover:bg-blue-500 font-bold text-white "
+                  >
+                    Cancel
+                  </button>
+                </>
+              ) : (
                 <button
-                  type="button"
-                  onClick={() => {
-                    editBookmarHandler(editId, title, url);
-                    setIsEditButtonClicked(false);
-                    setTitle("");
-                    setUrl("");
-                  }}
+                  type="submit"
                   className="p-2 bg-blue-600 rounded-md hover:cursor-pointer hover:bg-blue-500 font-bold text-white "
                 >
-                  Update
+                  Add Bookmark
                 </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsEditButtonClicked(false);
-                    setTitle("");
-                    setUrl("");
-                    setEditId("");
-                  }}
-                  className="p-2 bg-blue-600 rounded-md hover:cursor-pointer hover:bg-blue-500 font-bold text-white "
-                >
-                  Cancel
-                </button>
-              </>
-            ) : (
-              <button
-                type="submit"
-                className="p-2 bg-blue-600 rounded-md hover:cursor-pointer hover:bg-blue-500 font-bold text-white "
-              >
-                Add Bookmark
-              </button>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </form>
-      {message && <div className="text-green-800 font-bold">{message}</div>}
+        </form>
+        {message && <div className="text-green-800 font-bold">{message}</div>}
+      </div>
       {error && <div className="text-red-600 font-bold">{error}</div>}
       {myBookmark.length !== 0 ? (
-        myBookmark.map((data, index) => {
-          return (
-            <div
-              key={data.id}
-              className="flex justify-between items-center font-bold shadow-md p-2 bg-gray-100 mt-2 hover:bg-gray-300"
-            >
-              <div>
-                <a href={data.url} target="_blank" className="text-blue-600">
-                  {data.title}
-                </a>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  className="flex items-center hover:cursor-pointer text-blue-600 hover:bg-blue-700 hover:text-white border rounded-md p-1"
-                  onClick={() => editHandler(data.id, data.title, data.url)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+        <div className="bg-white mt-2 h-[calc(100vh-110px)] overflow-y-auto p-2">
+          {myBookmark.map((data, index) => {
+            return (
+              <div
+                key={data.id}
+                className="flex justify-between items-center font-bold shadow-md p-2 bg-gray-100 mt-2 hover:bg-gray-300"
+              >
+                <div>
+                  <a href={data.url} target="_blank" className="text-blue-600">
+                    {data.title}
+                  </a>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    className="flex items-center hover:cursor-pointer text-blue-600 hover:bg-blue-700 hover:text-white border rounded-md p-1"
+                    onClick={() => editHandler(data.id, data.title, data.url)}
                   >
-                    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                    <path
-                      fillRule="evenodd"
-                      d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Edit
-                </button>
-                <button
-                  className="flex items-center hover:cursor-pointer hover:bg-red-700 hover:text-white text-red-600 border rounded-md p-1"
-                  // onClick={() => {deleteBookmarkHandler(data.id);}}
-                  onClick={() => handleOpenConfirm(data.id, data.title)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                      <path
+                        fillRule="evenodd"
+                        d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    Edit
+                  </button>
+                  <button
+                    className="flex items-center hover:cursor-pointer hover:bg-red-700 hover:text-white text-red-600 border rounded-md p-1"
+                    // onClick={() => {deleteBookmarkHandler(data.id);}}
+                    onClick={() => handleOpenConfirm(data.id, data.title)}
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Delete
-                </button>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path
+                        fillRule="evenodd"
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          );
-        })
+            );
+          })
+          }
+        </div>
       ) : (
         <div>No Bookmark added</div>
       )}
