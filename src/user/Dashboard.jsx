@@ -17,7 +17,7 @@ function Dashboard() {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-  const [myBookmark, setMyBookmark] = useState(bookmark);
+  const [myBookmark, setMyBookmark] = useState([]);
   const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
   const [editId, setEditId] = useState("");
 

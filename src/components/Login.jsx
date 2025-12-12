@@ -26,9 +26,8 @@ function Login() {
     event.preventDefault();
     setMessage("");
     const response = login(email, password);
-    console.log(response);
     
-    response.then(data=>{setMessage(data.message); console.log(data.message);
+    response.then(data=>{setMessage(data?.message);
      setTimeout(()=>{setMessage("")},5000); return});
   };
 

@@ -25,7 +25,7 @@ import { useNavigate } from "react-router-dom";
 export const BookmarkContext = createContext();
 
 export function BookmarkProvider({ children }) {
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [bookmark, setBookmark] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,10 +35,11 @@ export function BookmarkProvider({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let bookmarkUnsubscribe;
     const authUnsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setLoading(false);
-
+      if (bookmarkUnsubscribe) bookmarkUnsubscribe();
       if (user) {
         // Fetch user data
         const userDocRef = doc(db, "users", user.uid);
@@ -58,7 +59,7 @@ export function BookmarkProvider({ children }) {
         );
         const q = query(bookmarkCollectionRef, orderBy("createdAt", "desc"));
 
-        const bookmarkUnsubscribe = onSnapshot(q, (snapshot) => {
+        bookmarkUnsubscribe = onSnapshot(q, (snapshot) => {
           const fetchedBookmarks = snapshot.docs.map((doc) => ({
             id: doc.id,
             ...doc.data(),
@@ -77,7 +78,7 @@ export function BookmarkProvider({ children }) {
     });
 
     // This is the cleanup for the onAuthStateChanged listener
-    return () => authUnsubscribe();
+    return () => {authUnsubscribe(); if (bookmarkUnsubscribe) bookmarkUnsubscribe();};
   }, []);
 
   const login = async (email, password) => {
