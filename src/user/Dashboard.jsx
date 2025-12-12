@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { BookmarkContext } from "../context/BookmarkContext";
 import { useNavigate } from "react-router-dom";
+import { db } from "../firebase";
+import { doc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 function Dashboard() {
   const { user, addBookmark, bookmark, deleteBookmarkHandler, editBookmarHandler, openModal } =
@@ -95,6 +97,21 @@ function Dashboard() {
     loadBookmark();
   }, [user, bookmark]);
 
+  const recentClickHandler = async(docId) => {
+    if(!user) {
+      navigate("/login"); 
+      return;
+    }
+    try {
+      const bookmarkCollectionRef = doc(db, "users", user.uid, "bookmarks", docId);
+      await updateDoc(bookmarkCollectionRef, {
+        recentClick: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error("Error updating recent clicks:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col w-full">
       <div className="sticky top-15 bg-white">
@@ -161,13 +178,14 @@ function Dashboard() {
       {myBookmark.length !== 0 ? (
         <div className="bg-white mt-2 h-[calc(100vh-110px)] overflow-y-auto p-2">
           {myBookmark.map((data, index) => {
+            console.log("Bookmark Data:", data);
             return (
               <div
                 key={data.id}
                 className="flex justify-between items-center font-bold shadow-md p-2 bg-gray-100 mt-2 hover:bg-gray-300"
               >
                 <div>
-                  <a href={data.url} target="_blank" className="text-blue-600">
+                  <a href={data.url} target="_blank" className="text-blue-600" onClick={()=>recentClickHandler(data.id)}>
                     {data.title}
                   </a>
                 </div>

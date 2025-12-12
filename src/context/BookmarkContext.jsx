@@ -18,6 +18,7 @@ import {
   updateDoc,
   onSnapshot,
   orderBy,
+  serverTimestamp,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +58,7 @@ export function BookmarkProvider({ children }) {
           user.uid,
           "bookmarks"
         );
-        const q = query(bookmarkCollectionRef, orderBy("createdAt", "desc"));
+        const q = query(bookmarkCollectionRef, orderBy("recentClick", "desc"));
 
         bookmarkUnsubscribe = onSnapshot(q, (snapshot) => {
           const fetchedBookmarks = snapshot.docs.map((doc) => ({
@@ -187,6 +188,7 @@ export function BookmarkProvider({ children }) {
         title: title,
         url: url,
         createdAt: new Date(),
+        recentClick: serverTimestamp(),
       });
       return { message: "Bookmarks added successfully", docRef: docRef.id };
     } catch (error) {
