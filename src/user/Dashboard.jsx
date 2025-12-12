@@ -178,7 +178,6 @@ function Dashboard() {
       {myBookmark.length !== 0 ? (
         <div className="bg-white mt-2 h-[calc(100vh-110px)] overflow-y-auto p-2">
           {myBookmark.map((data, index) => {
-            console.log("Bookmark Data:", data);
             return (
               <div
                 key={data.id}
