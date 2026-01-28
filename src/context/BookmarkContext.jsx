@@ -20,7 +20,8 @@ import {
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { auth, db, storage } from "../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 
 export const BookmarkContext = createContext();
@@ -234,6 +235,34 @@ export function BookmarkProvider({ children }) {
     }
   };
 
+  const addBugHandler = async (title, description, image, imageUrl="") => {
+    try {
+      let finalImageUrl = imageUrl;
+      if (image) {
+        const imageRef = ref(storage, `bugs/${user.uid}/${Date.now()}_${image.name}`);
+        await uploadBytes(imageRef, image);
+        finalImageUrl = await getDownloadURL(imageRef);
+      }
+      const bugCollectionRef = collection(
+        db,
+        "users",
+        user.uid,
+        "bugs"
+      );
+      const docRef = await addDoc(bugCollectionRef, {
+        title: title,
+        description: description,
+        imageName: image,
+        imageUrl: finalImageUrl,
+        createdAt: serverTimestamp(),
+      });
+      return { message: "Bug reported successfully", docRef: docRef.id };
+    } catch (error) {
+      console.log(error);
+      alert("Something went wrong, try again");
+    }
+  };
+
   return (
     <BookmarkContext.Provider
       value={{
@@ -252,6 +281,7 @@ export function BookmarkProvider({ children }) {
         openModal,
         closeModal,
         sendResetPasswordLink,
+        addBugHandler,
       }}
     >
       {children}
