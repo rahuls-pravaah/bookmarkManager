@@ -252,14 +252,14 @@ export function BookmarkProvider({ children }) {
       const docRef = await addDoc(bugCollectionRef, {
         title: title,
         description: description,
-        imageName: image,
+        imageName: image ? image.name : "",
         imageUrl: finalImageUrl,
         createdAt: serverTimestamp(),
       });
       return { message: "Bug reported successfully", docRef: docRef.id };
     } catch (error) {
       console.log(error);
-      alert("Something went wrong, try again");
+      throw error.message || "Failed to add bug";
     }
   };
 

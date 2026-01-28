@@ -62,6 +62,7 @@ const { user, addBugHandler } =
         setTimeout(() => {
           setMessage("");
         }, 5000);
+         onClose();
       })
       .catch((error) => {
         setError(error);
@@ -71,6 +72,7 @@ const { user, addBugHandler } =
       });
     setTitle("");
     setDescription("");
+
   };
 
   return (
